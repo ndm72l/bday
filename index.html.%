@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday - Gothic Realm</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cyan-accent: #00e5ff;
+            --cyan-glow: rgba(0, 229, 255, 0.4);
+            --card-bg: rgba(18, 16, 23, 0.95);
+            --text-color: #e0dbe6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #08070b url('goth-bg.jpg') repeat;
+            color: var(--text-color);
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* النجوم والبصمات المتحركة الملونة في الخلفية */
+        .magic-bg-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            animation: particleBlink 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes particleBlink {
+            0% { opacity: 0.1; transform: scale(0.8) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.3) rotate(15deg); }
+            100% { opacity: 0.1; transform: scale(0.8) rotate(-15deg); }
+        }
+
+        .en-times {
+            font-family: 'Times New Roman', Times, serif !important;
+            direction: ltr;
+            display: block;
+        }
+
+        /* شاشة البداية */
+        #intro-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: url('bg-dots.png') repeat-y center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1.2s ease, visibility 1.2s;
+        }
+
+        .start-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .pixel-cat-gif {
+            position: absolute;
+            width: 75px;
+            height: auto;
+            image-rendering: pixelated;
+        }
+
+        .pixel-cat-left {
+            top: 50%;
+            left: -90px;
+            transform: translateY(-50%);
+        }
+
+        .pixel-cat-right {
+            top: 50%;
+            right: -90px;
+            transform: translateY(-50%) scaleX(-1);
+        }
+
+        /* زر OPEN ME مع القلتر الفضي الفخم */
+        .open-btn {
+            background: #050505;
+            border: 3px solid #e0e0e0;
+            padding: 20px 50px;
+            font-size: 2rem;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            letter-spacing: 3px;
+            cursor: pointer;
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+            color: #ffffff;
+            background: linear-gradient(135deg, #1a1a1a 0%, #333333 50%, #111111 100%);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 8px #ffffff, 0 0 15px var(--cyan-accent), 0 0 25px #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .open-btn:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.8), 0 0 60px var(--cyan-accent);
+            border-color: var(--cyan-accent);
+        }
+
+        .angel-cat-img {
+            width: 150px;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+            margin-top: 15px;
+        }
+
+        /* الاسطوانة الموسيقية الحمراء */
+        #vinyl-player {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1000;
+            display: none;
+            cursor: pointer;
+            align-items: center;
+            gap: 12px;
+            background: rgba(12, 10, 16, 0.9);
+            padding: 8px 15px 8px 8px;
+            border-radius: 50px;
+            border: 2px solid #8b0000;
+            box-shadow: 0 0 20px rgba(139, 0, 0, 0.6);
+        }
+
+        .vinyl-disc {
+            width: 55px;
+            height: 55px;
+            background: radial-gradient(circle, #222 30%, #550000 31%, #330000 60%, #111 61%);
+            border-radius: 50%;
+            border: 2px solid #ff4d4d;
+            position: relative;
+            animation: spin 3s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .vinyl-disc::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 18px; height: 18px;
+            background: #8b0000;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .vinyl-label {
+            font-family: 'Cinzel', serif;
+            color: #ff9999;
+            font-size: 0.85rem;
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* إطار الصور القوثيك */
+        .gothic-framed-wrapper {
+            padding: 14px;
+            background: #000;
+            border: 3px solid #2a2235;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.9), 0 0 15px rgba(0, 229, 255, 0.15);
+            border-radius: 8px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .gothic-framed-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+            border-radius: 6px;
+        }
+
+        .gothic-framed-img {
+            width: 320px;
+            height: 380px;
+            object-fit: cover;
+            display: block;
+            border-radius: 4px;
+        }
+
+        .cat-img {
+            width: 250px !important;
+            height: 250px !important;
+            border-radius: 50% !important;
+        }
+
+        /* الصفوف */
+        .content-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 65px;
+            position: relative;
+        }
+
+        .content-row.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .text-box {
+            flex: 1;
+            background: var(--card-bg);
+            border: 1px solid #4a3b5c;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        /* قطة ماري الصغيرة على الجدار بجانب الصورة الثالثة */
+        .marie-cat-container {
+            position: absolute;
+            left: -110px;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+            z-index: 5;
+        }
+
+        .marie-cat-gif {
+            width: 90px;
+            height: auto;
+            filter: drop-shadow(0 0 8px rgba(255, 182, 193, 0.6));
+        }
+
+        .text-box h2 {
+            color: var(--cyan-accent);
+            font-family: 'Cinzel', serif;
+            margin-bottom: 12px;
+            font-size: 1.5rem;
+        }
+
+        .text-box p {
+            line-height: 1.8;
+            font-size: 1.15rem;
+            color: #f0ebf5;
+        }
+
+        .final-footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8c859b;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.15rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 850px) {
+            .content-row, .content-row.reverse {
+                flex-direction: column;
+                text-align: center;
+            }
+            .gothic-framed-wrapper, .gothic-framed-img {
+                width: 100%;
+                height: 350px;
+            }
+            .pixel-cat-left, .pixel-cat-right, .marie-cat-container {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- شاشة البداية -->
+    <div id="intro-overlay">
+        <div class="start-container">
+            <img src="pixel-cat.gif" alt="Pixel Cat" class="pixel-cat-gif pixel-cat-left">
+            <button class="open-btn" onclick="startExperience()">OPEN ME</button>
+            <img src="pixel-cat.gif" alt="Pixel Cat" class="pixel-cat-gif pixel-cat-right">
+        </div>
+        <img src="angel-cat.png" alt="Angel Cat" class="angel-cat-img">
+    </div>
+
+    <!-- الاسطوانة الموسيقية -->
+    <div id="vinyl-player" onclick="togglePlayPause()">
+        <div class="vinyl-disc" id="vinylDisc"></div>
+        <div class="vinyl-label" id="vinylStatus">Mr. Capone-E - Angel Baby</div>
+    </div>
+
+    <!-- الأصوات -->
+    <audio id="bg-music" loop>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="shayla-sound">
+        <source src="shayla-sound.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- المحتوى -->
+    <div class="main-content" id="mainContent">
+
+        <!-- 1. الصورة الأولى -->
+        <div class="content-row">
+            <div class="gothic-framed-wrapper">
+                <img src="friend1.jpg" alt="Friend 1" class="gothic-framed-img">
+            </div>
+            <div class="text-box">
+                <h2>Happy Birthday 🖤</h2>
+                <p class="en-times">
+                    You’re a rare kind of soul. Happy birthday to my 2023 treasure, my closest confidant, and the only one who truly matters to me
+                </p>
+            </div>
+        </div>
+
+        <!-- 2. الصورة الثانية -->
+        <div class="content-row reverse">
+            <div class="gothic-framed-wrapper">
+                <img src="friend2.jpg" alt="Friend 2" class="gothic-framed-img">
+            </div>
+            <div class="text-box">
+                <h2></h2>
+                <p class="en-times">
+                    In an abyss of shifting faces, you are my eternal anchor. My loyalty to you runs deeper than the blood in my veins
+                </p>
+            </div>
+        </div>
+
+        <!-- 3. الصورة الثالثة (مع قطة ماري الصغيرة على الجدار باليسار) -->
+        <div class="content-row" style="position: relative;">
+            <div class="marie-cat-container">
+                <img src="marie.gif" alt="Marie Cat" class="marie-cat-gif">
+            </div>
+
+            <div class="gothic-framed-wrapper">
+                <img src="friend3.jpg" alt="Friend 3" class="gothic-framed-img">
+            </div>
+            <div class="text-box">
+                <h2></h2>
+                <p class="en-times">
+                    tbh.. I want to chew on your biceps because I love you XD
+                </p>
+            </div>
+        </div>
+
+        <!-- 4. الصورة الرابعة -->
+        <div class="content-row reverse" id="shaylaCard">
+            <div class="gothic-framed-wrapper">
+                <img src="friend4.jpg" alt="Friend 4" class="gothic-framed-img">
+            </div>
+            <div class="text-box">
+                <h2></h2>
+                <p class="en-times">
+                    UGHH MY SHAYLAA 😫😫😫
+                </p>
+            </div>
+        </div>
+
+        <!-- 5. صورة جيلي القطوة -->
+        <div class="content-row">
+            <div class="gothic-framed-wrapper">
+                <img src="cat_final.jpg" alt="Jelly Cat" class="gothic-framed-img cat-img">
+            </div>
+            <div class="text-box">
+                <h2>🐾 Message from Jelly:</h2>
+                <p class="en-times">
+                    meow meow meowww meow meow meowwy meoww ii meow happy birthday mama meow meow 😸
+                </p>
+            </div>
+        </div>
+
+        <!-- التوقيع الأخير -->
+        <div class="final-footer">
+            Made with love by your original cat 🐈
+        </div>
+
+    </div>
+
+    <script>
+        let hasPlayedShayla = false;
+
+        function createMagicParticles() {
+            const symbols = ['✨', '🐾', '⭐', '💫', '🌟', '💖', '🐾'];
+            const colors = ['#00e5ff', '#ff4d94', '#ffcc00', '#bf00ff', '#00ffcc', '#ffffff', '#ff3333'];
+            const container = document.body;
+
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'magic-bg-particle';
+                particle.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.fontSize = (Math.random() * 14 + 12) + 'px';
+                particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.animationDuration = (Math.random() * 1.5 + 1) + 's';
+                particle.style.animationDelay = (Math.random() * 2) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        createMagicParticles();
+
+        function startExperience() {
+            const music = document.getElementById('bg-music');
+            const vinylDisc = document.getElementById('vinylDisc');
+            const vinylPlayer = document.getElementById('vinyl-player');
+            
+            // ضبط الانتقال للثانية 14 بدون تقطيع صوتي
+            music.currentTime = 14;
+            music.volume = 1.0;
+            music.play().catch(e => console.log("Audio error:", e));
+            
+            vinylPlayer.style.display = 'flex';
+            vinylDisc.style.animationPlayState = 'running';
+
+            const overlay = document.getElementById('intro-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.visibility = 'hidden';
+                document.getElementById('mainContent').style.opacity = '1';
+                setupScrollListener();
+            }, 1200);
+
+            var duration = 4 * 1000;
+            var animationEnd = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 3, angle: 60, spread: 55, origin: { x: 0, y: 0.2 },
+                    colors: ['#00e5ff', '#8b0000', '#4a0e4e', '#ffffff'], ticks: 300, gravity: 0.6, scalar: 1.1
+                });
+                confetti({
+                    particleCount: 3, angle: 120, spread: 55, origin: { x: 1, y: 0.2 },
+                    colors: ['#00e5ff', '#8b0000', '#4a0e4e', '#ffffff'], ticks: 300, gravity: 0.6, scalar: 1.1
+                });
+                if (Date.now() < animationEnd) {
+                    requestAnimationFrame(frame);
+                }
+            })();
+        }
+
+        function togglePlayPause() {
+            const music = document.getElementById('bg-music');
+            const vinylDisc = document.getElementById('vinylDisc');
+            const statusText = document.getElementById('vinylStatus');
+
+            if (music.paused) {
+                music.play();
+                vinylDisc.style.animationPlayState = 'running';
+                statusText.innerText = "Mr. Capone-E - Angel Baby";
+            } else {
+                music.pause();
+                vinylDisc.style.animationPlayState = 'paused';
+                statusText.innerText = "Paused ❚❚";
+            }
+        }
+
+        function setupScrollListener() {
+            const shaylaCard = document.getElementById('shaylaCard');
+            const shaylaSound = document.getElementById('shayla-sound');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !hasPlayedShayla) {
+                        hasPlayedShayla = true;
+                        shaylaSound.currentTime = 0;
+                        shaylaSound.play().catch(e => console.log("Sound error:", e));
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(shaylaCard);
+        }
+    </script>
+</body>
+</html>
