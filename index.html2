@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday! 🖤</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b0b0f;
+            background-image: url('goth-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f1f1f1;
+            font-family: 'Courier New', Courier, monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 15px;
+        }
+
+        /* حاوية الشاشة الأولى (زر الفتح) */
+        #intro-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(11, 11, 15, 0.85);
+            z-index: 1000;
+            transition: opacity 0.8s ease;
+        }
+
+        .open-btn {
+            background: linear-gradient(135deg, #1a1a24, #2d2d3d);
+            color: #fff;
+            border: 2px solid #ffb6c1;
+            padding: 15px 35px;
+            font-size: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 2px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 182, 193, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .open-btn:hover {
+            background: #ffb6c1;
+            color: #0b0b0f;
+            box-shadow: 0 0 30px rgba(255, 182, 193, 0.8);
+            transform: scale(1.05);
+        }
+
+        /* المحتوى الرئيسي للموقع */
+        #main-content {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px 10px;
+            text-align: center;
+        }
+
+        /* تنسيق صور الـ GIF والقطط لتناسب الشاشة تماماً */
+        .media-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        img, .gif-img {
+            max-width: 120px;
+            width: 35%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 182, 193, 0.3);
+        }
+
+        .main-photo {
+            max-width: 220px;
+            width: 70%;
+            height: auto;
+            border-radius: 15px;
+            margin: 15px auto;
+            border: 2px solid #ffb6c1;
+            box-shadow: 0 0 20px rgba(255, 182, 193, 0.3);
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #ffb6c1;
+            margin: 15px 0 10px 0;
+            text-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
+        }
+
+        p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #d1d1d6;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        /* تنسيق صور الأصدقاء والذكريات بشبكة متناسقة بالجوال */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .gallery img {
+            width: 100%;
+            max-width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- شاشة البداية (زر الفتح والأغنية) -->
+    <div id="intro-screen">
+        <button class="open-btn" onclick="startExperience()">OPEN ME 🖤</button>
+    </div>
+
+    <!-- المحتوى الرئيسي للموقع -->
+    <div id="main-content">
+        <h1>Happy Birthday! ✨</h1>
+        
+        <!-- صور القطط والـ GIF متناسقة وجنب بعض -->
+        <div class="media-container">
+            <img src="pixel-cat.gif" alt="Pixel Cat" class="gif-img">
+            <img src="marie.gif" alt="Marie Cat" class="gif-img">
+        </div>
+
+        <p>أتمنى لك أجمل وأسع أيام العمر، سنة سعيدة مليانة حب وضحك ونجاح! 🖤</p>
+
+        <!-- الصورة الرئيسية أو الرمزية -->
+        <img src="cat_final.jpg" alt="Special Cat" class="main-photo">
+
+        <!-- شبكة صور الذكريات (مرتبة بشكل جميل جنب بعض بالجوّال) -->
+        <div class="gallery">
+            <img src="friend1.jpg" alt="Memory 1">
+            <img src="friend2.jpg" alt="Memory 2">
+            <img src="friend3.jpg" alt="Memory 3">
+            <img src="friend4.jpg" alt="Memory 4">
+        </div>
+    </div>
+
+    <!-- الصوتيات -->
+    <audio id="bg-song" loop>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        function startExperience() {
+            // إخفاء شاشة البداية
+            const intro = document.getElementById('intro-screen');
+            intro.style.opacity = '0';
+            setTimeout(() => {
+                intro.style.display = 'none';
+            }, 800);
+
+            // تشغيل الأغنية
+            const song = document.getElementById('bg-song');
+            song.play().catch(error => {
+                console.log("Audio play prevented:", error);
+            });
+
+            // إظهار المحتوى الرئيسي
+            document.getElementById('main-content').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
